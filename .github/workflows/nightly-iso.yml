@@ -60,11 +60,17 @@ jobs:
             --out ci-rootfs \
             --edition minimal
       - name: Build ISO
+        id: build_iso
         run: |
+          set -o pipefail
           ./target/release/evergreen-build iso \
             --rootfs ci-rootfs \
             --out evergreen-nightly-minimal.iso \
-            --edition minimal
+            --edition minimal 2>&1 | tee iso-build.log
+      - name: Report ISO failure
+        if: failure() && steps.build_iso.outcome == 'failure'
+        run: |
+          echo "::error::$(tail -n 40 iso-build.log | tr '\n' ' ')"
       - name: Verify ISO
         run: |
           file evergreen-nightly-minimal.iso
