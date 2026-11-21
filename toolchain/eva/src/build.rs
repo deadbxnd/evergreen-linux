@@ -480,6 +480,9 @@ fn fetch_source(
 }
 
 fn extract_source_archive(path: &Path, destination: &Path) -> Result<()> {
+    // `tar` runs with `current_dir(destination)`, so a relative archive path
+    // would resolve there instead of in the build work directory.
+    let path = &std::fs::canonicalize(path)?;
     let name = path.to_string_lossy();
     std::fs::create_dir_all(destination)?;
 
