@@ -81,3 +81,5 @@ jobs:
           name: evergreen-nightly-minimal
           path: evergreen-nightly-minimal.iso
           if-no-files-found: error
+
+# Retrigger after fresh kernel artifacts.
