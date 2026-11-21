@@ -1,0 +1,67 @@
+name: Nightly ISO
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  iso:
+    name: Build minimal nightly ISO
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y squashfs-tools grub-common grub2-common xorriso mtools \
+            cpio gzip zstd xz-utils
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Build tools
+        run: cargo build --release -p eva -p evergreen-build
+      - name: Download latest LTS kernel package
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: kernel.yml
+          workflow_conclusion: success
+          name: linux-lts
+          path: ci-kernel
+      - name: Build bootstrap packages
+        run: |
+          mkdir -p ci-packages ci-root
+          for recipe in evergreen-filesystem evergreen-keyring pine-units pine-service-units pine-init pine eva; do
+            ./target/release/eva --root ci-root build "packages/core/$recipe.toml"
+          done
+          cp ci-root/var/cache/eva/packages/*.eva ci-packages/
+          cp ci-kernel/*.eva ci-packages/
+      - name: Create synthetic stage0 tarball
+        run: |
+          mkdir -p ci-stage0/usr/bin
+          cp /bin/sh ci-stage0/usr/bin/sh || true
+          cp /bin/busybox ci-stage0/usr/bin/busybox || true
+          tar --zstd -cf ci-stage0.tar.zst -C ci-stage0 .
+      - name: Assemble rootfs
+        run: |
+          ./target/release/evergreen-build assemble \
+            --stage0 ci-stage0.tar.zst \
+            --packages ci-packages \
+            --out ci-rootfs \
+            --edition minimal
+      - name: Build ISO
+        run: |
+          ./target/release/evergreen-build iso \
+            --rootfs ci-rootfs \
+            --out evergreen-nightly-minimal.iso \
+            --edition minimal
+      - name: Verify ISO
+        run: |
+          file evergreen-nightly-minimal.iso
+          xorriso -indev evergreen-nightly-minimal.iso -report_el_torito as_mkisofs
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: evergreen-nightly-minimal
+          path: evergreen-nightly-minimal.iso
+          if-no-files-found: error

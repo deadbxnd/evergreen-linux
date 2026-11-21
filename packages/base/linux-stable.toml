@@ -23,6 +23,7 @@ script = """
 set -eu
 KVER=$VERSION
 test -f .config
+if [ "${EVERGREEN_KERNEL_NO_RUST:-0}" = "1" ]; then ./scripts/config --disable CONFIG_RUST; fi
 make olddefconfig
 make -j"${JOBS:-4}"
 install -Dm755 arch/x86/boot/bzImage "$DESTDIR/boot/vmlinuz-$KVER"

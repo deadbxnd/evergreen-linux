@@ -218,7 +218,10 @@ manage ed25519 keys, and `evergreen-build publish` copies packages into a repo
 directory and writes the signed index. The production public key is packaged by
 `evergreen-keyring` from `ci/keys/evergreen.pub`. CI workflows under
 `.github/workflows/` run Rust checks, recipe validation, an index-signing smoke
-test, and a scheduled dynamic-resolution matrix.
+test, a scheduled dynamic-resolution matrix, scheduled **kernel package builds**
+(`kernel.yml`, with Rust kernel config disabled via `EVERGREEN_KERNEL_NO_RUST=1`
+on CI), and a scheduled **nightly minimal ISO build** (`nightly-iso.yml`) that
+downloads the LTS kernel artifact and assembles a bootable ISO.
 
 Package recipes resolve upstream versions dynamically. URLs use a `{version}`
 (or `{tag}`) placeholder and an empty `sha256`; `eva build` queries the

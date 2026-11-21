@@ -1,0 +1,39 @@
+name: Kernel packages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  build:
+    name: Build ${{ matrix.kernel }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        kernel: [linux-lts, linux-stable]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flex bison bc libelf-dev libssl-dev libncurses-dev \
+            dwarves zstd xz-utils cpio kmod rsync
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      - name: Build eva
+        run: cargo build --release -p eva
+      - name: Build kernel package
+        env:
+          EVERGREEN_KERNEL_NO_RUST: "1"
+        run: |
+          mkdir -p ci-kernel-root
+          ./target/release/eva --root ci-kernel-root build "packages/base/${{ matrix.kernel }}.toml"
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.kernel }}
+          path: ci-kernel-root/var/cache/eva/packages/*.eva
+          if-no-files-found: error
