@@ -249,6 +249,10 @@ fn generate_initramfs(rootfs: &Path) {
 
     let boot = rootfs.join("boot");
     let _ = std::fs::create_dir_all(&boot);
+    // cpio runs from the initramfs tree, so its output path must be absolute.
+    let Ok(boot) = std::fs::canonicalize(&boot) else {
+        return;
+    };
     let cpio_path = boot.join("initramfs.cpio");
     let initramfs = boot.join("initramfs");
 

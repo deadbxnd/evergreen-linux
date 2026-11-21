@@ -257,6 +257,11 @@ pub fn build_package(
     let destdir = work.join("destdir");
     std::fs::create_dir_all(&source_dir)?;
     std::fs::create_dir_all(&destdir)?;
+    // Build scripts run with `current_dir(source_dir)`, so all paths passed
+    // through the environment must be absolute.
+    let work = std::fs::canonicalize(&work)?;
+    let source_dir = work.join("src");
+    let destdir = work.join("destdir");
 
     check_build_dependencies(&recipe.build.depends, candidates, installed)?;
     fetch_source(&recipe, recipe_path, &work, &source_dir)?;
@@ -443,9 +448,10 @@ fn fetch_source(
         // `--root ci-root` inside the repository), copying recursively would
         // create ever-deeper paths. Skip the child that contains destination.
         let mut skip: Option<String> = None;
-        if let (Ok(source_abs), Ok(destination_abs)) =
-            (std::fs::canonicalize(&local), std::fs::canonicalize(source_dir))
-        {
+        if let (Ok(source_abs), Ok(destination_abs)) = (
+            std::fs::canonicalize(&local),
+            std::fs::canonicalize(source_dir),
+        ) {
             if destination_abs.starts_with(&source_abs) {
                 if let Ok(relative) = destination_abs.strip_prefix(&source_abs) {
                     skip = relative
