@@ -31,13 +31,21 @@ jobs:
           name: linux-lts
           path: ci-kernel
       - name: Build bootstrap packages
+        id: bootstrap
         run: |
+          set -o pipefail
           mkdir -p ci-packages ci-root
+          : > bootstrap.log
           for recipe in evergreen-filesystem evergreen-keyring pine-units pine-service-units pine-init pine eva; do
-            ./target/release/eva --root ci-root build "packages/core/$recipe.toml"
+            echo "=== $recipe ===" | tee -a bootstrap.log
+            ./target/release/eva --root ci-root build "packages/core/$recipe.toml" 2>&1 | tee -a bootstrap.log || exit $?
           done
           cp ci-root/var/cache/eva/packages/*.eva ci-packages/
           cp ci-kernel/*.eva ci-packages/
+      - name: Report bootstrap failure
+        if: failure() && steps.bootstrap.outcome == 'failure'
+        run: |
+          echo "::error::$(tail -n 40 bootstrap.log | tr '\n' ' ')"
       - name: Create synthetic stage0 tarball
         run: |
           mkdir -p ci-stage0/usr/bin
