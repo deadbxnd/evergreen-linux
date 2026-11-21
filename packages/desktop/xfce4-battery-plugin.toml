@@ -1,0 +1,25 @@
+[package]
+name = "xfce4-battery-plugin"
+version = "1.2.0"
+arch = "x86_64"
+description = "xfce4-battery-plugin"
+license = "GPL-2.0-or-later"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://archive.xfce.org/src/panel-plugins/xfce4-battery-plugin/1.2/xfce4-battery-plugin-{version}.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+if [ ! -x ./configure ]; then ./autogen.sh; fi
+./configure --prefix=/usr --disable-static
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gtk3", "xfce4-panel", "upower"]

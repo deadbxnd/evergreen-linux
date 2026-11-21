@@ -1,0 +1,9 @@
+/target/
+/artifacts/
+**/*.rs.bk
+*.swp
+*.tmp
+.DS_Store
+
+# Build/sysroot state
+/opt/evergreen/

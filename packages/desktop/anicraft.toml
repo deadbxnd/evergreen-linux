@@ -1,0 +1,28 @@
+[package]
+name = "anicraft"
+version = "0.2.1"
+arch = "x86_64"
+description = "ArtCraft anicraft application"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/storytold/anicraft/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+APP="anicraft"
+cargo build --release --workspace
+for bin in "$APP" "$APP-cli"; do
+    if [ -x "target/release/$bin" ]; then
+        install -Dm755 "target/release/$bin" "$DESTDIR/usr/bin/$bin"
+    fi
+done
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gtk3", "cairo"]

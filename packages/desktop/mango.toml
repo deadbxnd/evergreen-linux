@@ -1,0 +1,24 @@
+[package]
+name = "mango"
+version = "0.18.6"
+arch = "x86_64"
+description = "mango"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/mangowm/mango/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dman-pages=disabled
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["wlroots", "wayland", "wayland-protocols", "libinput", "libxkbcommon", "pixman", "mesa"]

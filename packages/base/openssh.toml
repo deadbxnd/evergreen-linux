@@ -1,0 +1,25 @@
+[package]
+name = "openssh"
+version = "10.6"
+arch = "x86_64"
+description = "openssh"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/openssh/openssh-portable/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+if [ ! -x ./configure ]; then autoreconf -fi; fi
+./configure --prefix=/usr --with-privsep-path=/var/empty
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["openssl", "zlib", "autoconf"]

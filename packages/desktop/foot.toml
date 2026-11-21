@@ -1,0 +1,24 @@
+[package]
+name = "foot"
+version = "1.15.0"
+arch = "x86_64"
+description = "foot"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/neonkore/foot/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Ddocs=disabled -Dgrapheme-clustering=disabled -Dterminfo=disabled
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["wayland", "wayland-protocols", "libxkbcommon", "pixman", "fontconfig", "tllist", "fcft"]

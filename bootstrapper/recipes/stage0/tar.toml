@@ -1,0 +1,19 @@
+[package]
+name = "tar"
+version = "1.35"
+arch = "any"
+description = "GNU tar archiver"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/tar/tar-1.35.tar.xz"
+sha256 = "4d62ff37342ec7aed748535323930c7cf94acf71c3591882b26a7ea50f3edc16"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

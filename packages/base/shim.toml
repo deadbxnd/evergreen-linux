@@ -1,0 +1,22 @@
+[package]
+name = "shim"
+version = "16.1"
+arch = "x86_64"
+description = "UEFI shim loader for Secure Boot"
+license = "GPL-2.0"
+
+[source]
+url = "https://github.com/rhboot/shim/releases/download/{version}/shim-{version}.tar.bz2"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+make -j"${JOBS:-4}"
+install -Dm644 shimx64.efi "$DESTDIR/usr/lib/shim/shimx64.efi"
+install -Dm644 mmx64.efi "$DESTDIR/usr/lib/shim/mmx64.efi"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gnu-efi"]

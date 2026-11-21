@@ -1,0 +1,19 @@
+[package]
+name = "coreutils"
+version = "9.4"
+arch = "any"
+description = "GNU core utilities"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/coreutils/coreutils-9.4.tar.xz"
+sha256 = "ea613a4cf44612326e917201bbbcdfbd301de21ffc3b59b6e5c07e040b275e52"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["glibc"]
+configure = "./configure --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

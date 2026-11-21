@@ -1,0 +1,23 @@
+[package]
+name = "ly"
+version = "1.5.0"
+arch = "x86_64"
+description = "ly display manager"
+license = "GPL-2.0-or-later"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/fairyglade/ly/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pam", "ncurses", "elogind"]

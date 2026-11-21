@@ -1,0 +1,24 @@
+[package]
+name = "sway"
+version = "1.12"
+arch = "x86_64"
+description = "Wayland tiling window manager"
+license = "MIT"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/swaywm/sway/archive/refs/tags/{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dman-pages=disabled -Dsd-bus-provider=none
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["wlroots", "wayland", "wayland-protocols", "libinput", "libxkbcommon", "pango", "cairo"]

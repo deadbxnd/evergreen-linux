@@ -1,0 +1,27 @@
+[package]
+name = "tzdata"
+version = "2026b"
+arch = "noarch"
+description = "IANA time zone database"
+license = "Public-Domain"
+
+[source]
+url = "https://data.iana.org/time-zones/releases/tzdata{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/zoneinfo"
+for file in africa antarctica asia australasia europe northamerica southamerica etcetera backward factory systemv pacificnew; do
+    if [ -f "$file" ]; then zic -d "$DESTDIR/usr/share/zoneinfo" "$file"; fi
+done
+for file in zone.tab zone1970.tab iso3166.tab tzdata.zi leapseconds; do
+    if [ -f "$file" ]; then
+install -Dm644 "$file" "$DESTDIR/usr/share/zoneinfo/$file"; fi
+done
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

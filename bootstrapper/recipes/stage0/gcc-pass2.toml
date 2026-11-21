@@ -1,0 +1,19 @@
+[package]
+name = "gcc-pass2"
+version = "13.2.0"
+arch = "any"
+description = "Full GCC toolchain (pass 2)"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.xz"
+sha256 = "e275e76442a6067341a27f04c5c6b83d8613144004c0413528863dc6b5c743da"
+
+[bootstrap]
+stage = 0
+pass = 4
+build_deps = ["gcc-pass1", "libc"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --enable-languages=c,c++ --disable-werror"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

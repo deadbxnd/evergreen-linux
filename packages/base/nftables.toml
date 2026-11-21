@@ -1,0 +1,23 @@
+[package]
+name = "nftables"
+version = "1.1.5"
+arch = "x86_64"
+description = "nftables firewall frontend"
+license = "GPL-2.0"
+
+[source]
+url = "https://www.netfilter.org/pub/nftables/nftables-{version}.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+./configure --prefix=/usr --disable-debug
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

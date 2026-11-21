@@ -1,0 +1,25 @@
+[package]
+name = "uutils-coreutils"
+version = "0.0.27"
+release = 1
+arch = "x86_64"
+description = "Rust implementation of GNU coreutils"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://crates.io/api/v1/crates/coreutils/{version}/download"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd coreutils-$VERSION
+# `expr` pulls oniguruma, whose bundled C uses function-pointer casts rejected
+# by recent GCC. All other common utilities build cleanly.
+cargo install --locked --path . --root "$DESTDIR/usr" \
+    --no-default-features \
+    --features "base32,base64,basename,basenc,cat,cksum,comm,cp,csplit,cut,date,df,dir,dircolors,dirname,dd,du,echo,env,expand,factor,false,fmt,fold,hashsum,head,join,link,ln,ls,mkdir,mktemp,more,mv,nl,numfmt,od,paste,pr,printenv,printf,ptx,pwd,readlink,realpath,rm,rmdir,seq,shred,shuf,sleep,sort,split,sum,tac,tail,tee,test,tr,true,truncate,tsort,touch,unexpand,uniq,unlink,vdir,wc,yes"
+ln -sf coreutils "$DESTDIR/usr/bin/ls"
+ln -sf coreutils "$DESTDIR/usr/bin/cat"
+"""

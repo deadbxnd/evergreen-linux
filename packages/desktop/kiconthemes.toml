@@ -1,0 +1,24 @@
+[package]
+name = "kiconthemes"
+version = "6.24.1"
+arch = "x86_64"
+description = "kiconthemes"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/KDE/kiconthemes/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build build --parallel "${JOBS:-4}"
+DESTDIR="$DESTDIR" cmake --install build
+"""
+
+[stage1]
+stage = 1
+build_deps = ["kconfigwidgets", "kio", "extra-cmake-modules"]

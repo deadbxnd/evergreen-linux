@@ -1,0 +1,19 @@
+[package]
+name = "rust"
+version = "1.85.0"
+arch = "aarch64"
+description = "Rust toolchain seed (official distribution tarball)"
+license = "MIT OR Apache-2.0"
+
+[source]
+url = "https://static.rust-lang.org/dist/2025-02-20/rust-1.85.0-aarch64-unknown-linux-gnu.tar.gz"
+sha256 = "0306c30bee00469fbec4b07bb04ea0308c096454354c3dc96a92b729f1c2acd1"
+
+[bootstrap]
+stage = 0
+pass = 7
+build_deps = ["binutils-pass2", "gcc-pass2", "libc", "curl", "ca-certificates"]
+editions = ["both"]
+configure = ""
+build = ""
+install = "./install.sh --prefix='{sysroot}/usr' --disable-ldconfig --without=rust-docs --components=rustc,cargo,rust-std-aarch64-unknown-linux-gnu"

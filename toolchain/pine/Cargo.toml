@@ -1,0 +1,24 @@
+[package]
+name = "pine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Evergreen Linux init system (PID 1)"
+
+[lib]
+name = "pine"
+path = "src/lib.rs"
+
+[dependencies]
+evergreen-common.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+clap.workspace = true
+signal-hook.workspace = true
+libc.workspace = true
+chrono.workspace = true

@@ -1,0 +1,26 @@
+# Evergreen Bootstrapper configuration
+# See docs/design (evergreen-bootstrapper.md) for details.
+
+[bootstrap]
+# Default C library edition: "glibc" or "musl"
+libc = "glibc"
+
+# Target architecture: "x86_64" or "aarch64"
+arch = "x86_64"
+
+# Working directory for sources, sysroot, and build state.
+workdir = "/opt/evergreen"
+
+# Parallel build jobs.
+jobs = 0          # 0 = nproc
+
+# Published stage0 tarball to reuse (optional).
+# stage0_tarball = "https://releases.evergreenlinux.org/stage0/evergreen-stage0-2026.11-x86_64-glibc.tar.zst"
+
+[mirrors]
+# Primary source mirror fallback order.
+# source = ["https://mirror.evergreenlinux.org/sources", "https://github.com/evergreenlinux/sources"]
+
+[output]
+# Where stage artifacts are written.
+artifacts = "artifacts"

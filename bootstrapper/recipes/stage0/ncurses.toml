@@ -1,0 +1,19 @@
+[package]
+name = "ncurses"
+version = "6.4"
+arch = "any"
+description = "Terminal handling library"
+license = "MIT"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/ncurses/ncurses-6.4.tar.gz"
+sha256 = "6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --with-shared --without-debug --enable-widec"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

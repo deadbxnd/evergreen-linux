@@ -1,0 +1,28 @@
+[package]
+name = "evergreen-mirrors"
+version = "2026.11"
+arch = "noarch"
+description = "Evergreen Linux repository mirror list"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/eva"
+cat > "$DESTDIR/usr/share/eva/mirrors.toml" <<'EOF2'
+[[mirror]]
+name = "github"
+url = "https://github.com/evergreenlinux/repos"
+priority = 0
+
+[[mirror]]
+name = "community"
+url = "https://mirrors.evergreenlinux.org"
+priority = 10
+EOF2
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

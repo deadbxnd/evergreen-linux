@@ -1,0 +1,24 @@
+[package]
+name = "libxcomposite"
+version = "0.4.6"
+arch = "x86_64"
+description = "libxcomposite"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://www.x.org/releases/individual/lib/libXcomposite-{version}.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+./configure --prefix=/usr --disable-static
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["libx11"]

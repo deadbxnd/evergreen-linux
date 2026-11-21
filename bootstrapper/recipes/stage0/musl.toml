@@ -1,0 +1,19 @@
+[package]
+name = "libc"
+version = "1.2.4"
+arch = "any"
+description = "musl C library"
+license = "MIT"
+
+[source]
+url = "https://musl.libc.org/releases/musl-1.2.4.tar.gz"
+sha256 = "7a35eae33d5372a7c0da1188de798726f68825513b7ae3ebe97aaaa52114f039"
+
+[bootstrap]
+stage = 0
+pass = 3
+build_deps = ["gcc-pass1"]
+editions = ["musl"]
+configure = "./configure --prefix=/usr"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

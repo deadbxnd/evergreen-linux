@@ -1,0 +1,21 @@
+[package]
+name = "efivar"
+version = "39"
+arch = "x86_64"
+description = "EFI variable access library"
+license = "LGPL-2.1"
+
+[source]
+url = "https://github.com/rhboot/efivar/archive/refs/tags/{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+make -j"${JOBS:-4}" PREFIX=/usr LIBDIR=/usr/lib
+make PREFIX=/usr LIBDIR=/usr/lib DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

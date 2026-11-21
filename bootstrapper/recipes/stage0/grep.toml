@@ -1,0 +1,19 @@
+[package]
+name = "grep"
+version = "3.11"
+arch = "any"
+description = "GNU grep"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/grep/grep-3.11.tar.xz"
+sha256 = "1db2aedde89d0dea42b16d9528f894c8d15dae4e190b59aecc78f5a951276eab"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

@@ -1,0 +1,22 @@
+[package]
+name = "evergreen-keyring"
+version = "2026.11"
+release = 1
+arch = "noarch"
+description = "Evergreen repository signing keys"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../../ci/keys"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/etc/eva/keys"
+install -Dm644 evergreen.pub "$DESTDIR/etc/eva/keys/evergreen.pub"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

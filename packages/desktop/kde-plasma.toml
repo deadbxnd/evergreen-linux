@@ -1,0 +1,29 @@
+[package]
+name = "kde-plasma"
+version = "2026.11"
+arch = "noarch"
+description = "KDE Plasma desktop meta-package"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+qt6-base = "*"
+qt6-declarative = "*"
+qt6-wayland = "*"
+plasma-framework = "*"
+kwin = "*"
+plasma-workspace = "*"
+plasma-desktop = "*"
+breeze = "*"
+sddm = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+echo "kwin plasma-workspace plasma-desktop breeze sddm" > "$DESTDIR/usr/share/evergreen/kde-plasma.txt"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["plasma-desktop", "sddm"]

@@ -1,0 +1,24 @@
+[package]
+name = "gtk4"
+version = "4.25.1"
+arch = "x86_64"
+description = "gtk4"
+license = "LGPL-2.1-or-later"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/GNOME/gtk/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Ddocumentation=false -Dtests=false -Dintrospection=false
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["glib", "pango", "cairo", "gdk-pixbuf", "atk", "libepoxy", "fribidi", "graphene", "wayland", "wayland-protocols", "libx11", "libxkbcommon", "harfbuzz", "fontconfig", "freetype", "libxcursor", "libxi", "libxrandr", "libxdamage", "libxfixes", "libxcomposite", "libxinerama", "mesa"]

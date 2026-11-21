@@ -1,0 +1,37 @@
+[package]
+name = "gnome"
+version = "2026.11"
+arch = "noarch"
+description = "GNOME desktop meta-package"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+gdm = "*"
+gnome-shell = "*"
+gnome-session = "*"
+gnome-settings-daemon = "*"
+gnome-control-center = "*"
+nautilus = "*"
+gnome-terminal = "*"
+gnome-keyring = "*"
+gnome-online-accounts = "*"
+gnome-disk-utility = "*"
+papers = "*"
+gnome-text-editor = "*"
+loupe = "*"
+gnome-calculator = "*"
+file-roller = "*"
+gnome-calendar = "*"
+gnome-contacts = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+echo "gnome-shell gnome-session gnome-control-center nautilus gnome-terminal" > "$DESTDIR/usr/share/evergreen/gnome.txt"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gnome-shell", "gnome-session", "gnome-control-center", "nautilus", "gnome-terminal"]

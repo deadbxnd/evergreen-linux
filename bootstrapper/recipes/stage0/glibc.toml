@@ -1,0 +1,19 @@
+[package]
+name = "libc"
+version = "2.39"
+arch = "any"
+description = "GNU C library"
+license = "LGPL-2.1-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/glibc/glibc-2.39.tar.xz"
+sha256 = "f77bd47cf8170c57365ae7bf86696c118adb3b120d3259c64c502d3dc1e2d926"
+
+[bootstrap]
+stage = 0
+pass = 3
+build_deps = ["gcc-pass1"]
+editions = ["glibc"]
+configure = "mkdir -p build && cd build && ../configure --prefix=/usr --enable-kernel=5.15 --disable-werror"
+build = "cd build && make -j{jobs}"
+install = "cd build && make DESTDIR='{sysroot}' install"

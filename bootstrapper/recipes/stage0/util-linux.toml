@@ -1,0 +1,19 @@
+[package]
+name = "util-linux"
+version = "2.39"
+arch = "any"
+description = "Linux system utilities"
+license = "GPL-2.0-or-later"
+
+[source]
+url = "https://www.kernel.org/pub/linux/utils/util-linux/v2.39/util-linux-2.39.tar.xz"
+sha256 = "32b30a336cda903182ed61feb3e9b908b762a5e66fe14e43efb88d37162075cb"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --disable-nls --without-python"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

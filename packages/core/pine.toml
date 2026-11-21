@@ -1,0 +1,22 @@
+[package]
+name = "pine"
+version = "0.1.0"
+arch = "x86_64"
+description = "Evergreen Linux init system and control client"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../.."
+
+[build]
+script = """
+set -eu
+cargo build --release -p pine --target-dir "$SRC/target/stage1"
+install -Dm755 "$SRC/target/stage1/release/pine" "$DESTDIR/usr/sbin/pine"
+install -Dm755 "$SRC/target/stage1/release/pinectl" "$DESTDIR/usr/bin/pinectl"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine-units"]

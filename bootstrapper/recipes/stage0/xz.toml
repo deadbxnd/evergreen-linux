@@ -1,0 +1,19 @@
+[package]
+name = "xz"
+version = "5.4.6"
+arch = "any"
+description = "XZ compression utilities"
+license = "GPL-2.0-or-later"
+
+[source]
+url = "https://tukaani.org/xz/xz-5.4.6.tar.gz"
+sha256 = "aeba3e03bf8140ddedf62a0a367158340520f6b384f75ca6045ccc6c0d43fd5c"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

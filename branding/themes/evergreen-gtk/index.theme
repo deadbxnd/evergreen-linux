@@ -1,0 +1,10 @@
+[X-GNOME-Metatheme]
+Name=Evergreen
+Comment=Evergreen Linux GTK theme
+GtkTheme=Evergreen
+MetacityTheme=Evergreen
+IconTheme=Papirus
+CursorTheme=Evergreen-Cursors
+
+[Desktop]
+ColorScheme=Slight

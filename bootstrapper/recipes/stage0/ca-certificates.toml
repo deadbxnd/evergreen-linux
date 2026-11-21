@@ -1,0 +1,19 @@
+[package]
+name = "ca-certificates"
+version = "20240311"
+arch = "any"
+description = "Mozilla CA certificate bundle"
+license = "MPL-2.0"
+
+[source]
+url = "https://curl.se/ca/cacert-2024-03-11.pem"
+sha256 = "1794c1d4f7055b7d02c2170337b61b48a2ef6c90d77e95444fd2596f4cac609f"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = []
+editions = ["both"]
+configure = ""
+build = ""
+install = "install -Dm644 cacert-2024-03-11.pem '{sysroot}/etc/ssl/certs/ca-certificates.crt'"

@@ -1,0 +1,69 @@
+[package]
+name = "pine-units"
+version = "2026.11"
+release = 1
+arch = "noarch"
+description = "Base pine service and target units"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[build]
+script = """
+set -eu
+U="$DESTDIR/usr/lib/pine/services"
+mkdir -p "$U"
+
+cat > "$U/sysinit.target" <<'EOF'
+[Unit]
+Description = "System initialization"
+EOF
+
+cat > "$U/basic.target" <<'EOF'
+[Unit]
+Description = "Basic system"
+Wants = ["sysinit.target"]
+EOF
+
+cat > "$U/multi-user.target" <<'EOF'
+[Unit]
+Description = "Multi-user system"
+Wants = ["basic.target"]
+EOF
+
+cat > "$U/graphical.target" <<'EOF'
+[Unit]
+Description = "Graphical interface"
+Wants = ["multi-user.target"]
+EOF
+
+cat > "$U/rescue.target" <<'EOF'
+[Unit]
+Description = "Rescue mode"
+EOF
+
+cat > "$U/poweroff.target" <<'EOF'
+[Unit]
+Description = "Power off"
+EOF
+
+cat > "$U/reboot.target" <<'EOF'
+[Unit]
+Description = "Reboot"
+EOF
+
+cat > "$U/getty@.service" <<'EOF'
+[Unit]
+Description = "Virtual console getty on %I"
+
+[Service]
+Type = "simple"
+ExecStart = "/usr/sbin/agetty --noclear tty%I 38400 linux"
+Restart = "on-failure"
+
+[Install]
+WantedBy = "multi-user.target"
+EOF
+
+mkdir -p "$U/multi-user.target.wants"
+ln -s "../getty@.service" "$U/multi-user.target.wants/getty@tty1.service"
+"""

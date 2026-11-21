@@ -1,0 +1,19 @@
+[package]
+name = "gzip"
+version = "1.12"
+arch = "any"
+description = "GNU gzip compressor"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/gzip/gzip-1.12.tar.xz"
+sha256 = "ce5e03e519f637e1f814011ace35c4f87b33c0bbabeec35baf5fbd3479e91956"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

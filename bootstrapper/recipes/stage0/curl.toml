@@ -1,0 +1,19 @@
+[package]
+name = "curl"
+version = "8.6.0"
+arch = "any"
+description = "HTTP fetching tool and library"
+license = "curl"
+
+[source]
+url = "https://curl.se/download/curl-8.6.0.tar.gz"
+sha256 = "9c6db808160015f30f3c656c0dec125feb9dc00753596bf858a272b5dd8dc398"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["openssl", "zlib"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --with-openssl --with-zlib --disable-ldap --disable-manual"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

@@ -1,0 +1,25 @@
+[package]
+name = "jetbrains-mono"
+version = "2.304"
+arch = "noarch"
+description = "jetbrains-mono"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/JetBrains/JetBrainsMono/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+mkdir -p "$DESTDIR/usr/share/fonts/jetbrains-mono"
+find fonts -type f -name "*.ttf" | while read -r font; do
+    install -Dm644 "$font" "$DESTDIR/usr/share/fonts/jetbrains-mono/$(basename "$font")"
+done
+"""
+
+[stage1]
+stage = 1
+build_deps = ["fontconfig"]

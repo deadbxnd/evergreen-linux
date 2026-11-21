@@ -1,0 +1,38 @@
+@define-color evergreen #2d6a4f;
+@define-color evergreen_light #40916c;
+@define-color evergreen_dark #1b4332;
+@define-color bg_color #f7f9f8;
+@define-color fg_color #1b1f1d;
+
+* {
+  -GtkWidget-focus-line-width: 1;
+  -GtkWidget-focus-padding: 2;
+}
+
+.window {
+  background-color: @bg_color;
+  color: @fg_color;
+}
+
+button:checked,
+button:active {
+  background-color: @evergreen;
+  color: #ffffff;
+}
+
+headerbar,
+.header-bar {
+  background-color: @evergreen_light;
+  color: #ffffff;
+}
+
+entry:focus,
+.entry:focus {
+  border-color: @evergreen;
+}
+
+selection,
+:selected {
+  background-color: @evergreen_light;
+  color: #ffffff;
+}

@@ -1,0 +1,22 @@
+[package]
+name = "tuigreet"
+version = "0.11.1"
+arch = "x86_64"
+description = "TUI greetd greeter"
+license = "MIT"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/tuigreet/tuigreet/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+cargo install --locked --path . --root "$DESTDIR/usr" --bins
+"""
+
+[stage1]
+stage = 1
+build_deps = ["greetd", "pam"]

@@ -1,0 +1,24 @@
+[package]
+name = "e2fsprogs"
+version = "1.47.4"
+arch = "x86_64"
+description = "ext2/3/4 filesystem utilities"
+license = "GPL-2.0"
+
+[source]
+url = "https://github.com/tytso/e2fsprogs/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+if [ ! -x ./configure ]; then ./autogen.sh; fi
+./configure --prefix=/usr --enable-elf-shlibs --disable-libblkid --disable-libuuid --disable-uuidd
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

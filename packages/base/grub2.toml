@@ -1,0 +1,26 @@
+[package]
+name = "grub2"
+version = "2.12"
+arch = "x86_64"
+description = "GRUB bootloader (BIOS and UEFI)"
+license = "GPL-3.0"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/grub/grub-{version}.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+mkdir -p build-pc build-efi
+(cd build-pc && ../configure --prefix=/usr --disable-werror &&
+make -j"${JOBS:-4}" &&
+make DESTDIR="$DESTDIR" install)
+(cd build-efi && ../configure --prefix=/usr --target=x86_64-efi --with-platform=efi --disable-werror &&
+make -j"${JOBS:-4}" &&
+make DESTDIR="$DESTDIR" install)
+"""
+
+[stage1]
+stage = 1
+build_deps = ["efibootmgr", "gnu-efi"]

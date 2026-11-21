@@ -1,0 +1,19 @@
+[package]
+name = "gcc-pass1"
+version = "13.2.0"
+arch = "any"
+description = "Bootstrap GCC (pass 1, C only)"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.xz"
+sha256 = "e275e76442a6067341a27f04c5c6b83d8613144004c0413528863dc6b5c743da"
+
+[bootstrap]
+stage = 0
+pass = 2
+build_deps = ["binutils-pass1"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --without-headers --with-newlib --disable-nls --disable-shared --disable-threads --enable-languages=c --disable-werror"
+build = "make -j{jobs} all-gcc"
+install = "make DESTDIR='{sysroot}' install-gcc"

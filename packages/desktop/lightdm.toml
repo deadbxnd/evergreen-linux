@@ -1,0 +1,25 @@
+[package]
+name = "lightdm"
+version = "1.33.1"
+arch = "x86_64"
+description = "lightdm display manager"
+license = "GPL-2.0-or-later"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/canonical/lightdm/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+if [ ! -x ./configure ]; then ./autogen.sh; fi
+./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gtk-doc
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["glib", "pam", "libx11", "dbus", "polkit"]

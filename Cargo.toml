@@ -1,0 +1,50 @@
+[workspace]
+resolver = "2"
+members = [
+    "bootstrapper",
+    "toolchain/common",
+    "toolchain/pine",
+    "toolchain/eva",
+    "toolchain/installer",
+    "toolchain/build",
+    "toolchain/pine-init",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.78"
+license = "MIT OR Apache-2.0"
+authors = ["Evergreen Linux contributors"]
+repository = "https://github.com/evergreenlinux/evergreen"
+
+[workspace.dependencies]
+evergreen-common = { path = "toolchain/common" }
+eva = { path = "toolchain/eva" }
+evergreen-build = { path = "toolchain/build" }
+
+anyhow = "1.0"
+thiserror = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tokio = { version = "1", features = ["full"] }
+clap = { version = "4.5", features = ["derive"] }
+petgraph = "0.6"
+signal-hook = "0.3"
+libc = "0.2"
+chrono = "0.4"
+rusqlite = { version = "0.32", features = ["bundled"] }
+sha2 = "0.10"
+hex = "0.4"
+ed25519-dalek = { version = "2", features = ["std", "rand_core"] }
+tar = "0.4"
+zstd = "0.13"
+flate2 = "1"
+fs2 = "0.4"
+ureq = "2"
+regex = "1"
+rand_core = { version = "0.6", features = ["getrandom"] }
+urlencoding = "2"

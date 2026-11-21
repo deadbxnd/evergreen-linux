@@ -1,0 +1,21 @@
+[package]
+name = "pine-init"
+version = "0.1.0"
+arch = "x86_64"
+description = "Static initramfs init for Evergreen Linux"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../.."
+
+[build]
+script = """
+set -eu
+cargo build --release -p pine-init --target-dir "$SRC/target/stage1"
+install -Dm755 "$SRC/target/stage1/release/pine-init" "$DESTDIR/usr/lib/pine-init/init"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

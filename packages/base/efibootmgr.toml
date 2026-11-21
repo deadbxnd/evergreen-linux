@@ -1,0 +1,21 @@
+[package]
+name = "efibootmgr"
+version = "18"
+arch = "x86_64"
+description = "EFI boot manager entry tool"
+license = "GPL-2.0"
+
+[source]
+url = "https://github.com/rhboot/efibootmgr/archive/refs/tags/{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+make -j"${JOBS:-4}" EFIVAR_LIB_PATH=/usr/lib
+install -Dm755 src/efibootmgr "$DESTDIR/usr/sbin/efibootmgr"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["efivar"]

@@ -1,0 +1,27 @@
+[package]
+name = "evergreen-filesystem"
+version = "2026.11"
+release = 1
+arch = "noarch"
+description = "Evergreen base filesystem layout and usr-merge symlinks"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/bin" "$DESTDIR/usr/sbin" "$DESTDIR/usr/lib" "$DESTDIR/usr/lib64"
+mkdir -p "$DESTDIR/etc" "$DESTDIR/var/log" "$DESTDIR/var/lib" "$DESTDIR/run" "$DESTDIR/tmp"
+chmod 1777 "$DESTDIR/tmp"
+for link in bin sbin lib lib64; do
+    rm -f "$DESTDIR/$link"
+    ln -s "usr/$link" "$DESTDIR/$link"
+done
+cat > "$DESTDIR/etc/os-release" <<'EOF'
+NAME="Evergreen Linux"
+ID=evergreen
+PRETTY_NAME="Evergreen Linux"
+VERSION_ID=2026.11
+HOME_URL="https://evergreenlinux.org"
+EOF
+"""

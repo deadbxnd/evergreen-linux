@@ -1,0 +1,22 @@
+[package]
+name = "greetd"
+version = "0.10.3"
+arch = "x86_64"
+description = "Rust display manager daemon"
+license = "MIT"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/kennylevinsen/greetd/archive/refs/tags/{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd greetd-$VERSION
+cargo install --locked --path greetd --root "$DESTDIR/usr" --bins
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

@@ -1,0 +1,23 @@
+[package]
+name = "polkit"
+version = "126"
+arch = "x86_64"
+description = "PolicyKit authorization framework"
+license = "LGPL-2.1"
+
+[source]
+url = "https://github.com/polkit-org/polkit/archive/refs/tags/{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dman=false -Dgtk4=false
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["dbus"]

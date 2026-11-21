@@ -1,0 +1,19 @@
+[package]
+name = "pkgconf"
+version = "1.8.1"
+arch = "any"
+description = "pkg-config compatible build helper"
+license = "ISC"
+
+[source]
+url = "https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-1.8.1.tar.gz"
+sha256 = "bbc87d08dfb8affd8658fd99e0f1e405a74f12422c862cdfd4797dd20e953383"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./autogen.sh --prefix=/usr --disable-static"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

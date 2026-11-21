@@ -1,0 +1,25 @@
+[package]
+name = "helium"
+version = "0.22.2.1"
+arch = "x86_64"
+description = "helium"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/imputnet/helium-linux/releases/download/{tag}/helium-{version}-x86_64_linux.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+mkdir -p "$DESTDIR/opt/helium"
+cp -a . "$DESTDIR/opt/helium/"
+mkdir -p "$DESTDIR/usr/bin"
+ln -sf /opt/helium/helium "$DESTDIR/usr/bin/helium"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["desktop-file-utils"]

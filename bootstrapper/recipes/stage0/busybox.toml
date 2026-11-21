@@ -1,0 +1,19 @@
+[package]
+name = "coreutils"
+version = "1.36.1"
+arch = "any"
+description = "BusyBox multi-call utilities"
+license = "GPL-2.0-only"
+
+[source]
+url = "https://busybox.net/downloads/busybox-1.36.1.tar.bz2"
+sha256 = "b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["musl"]
+configure = "make defconfig"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

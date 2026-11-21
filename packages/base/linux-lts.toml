@@ -1,0 +1,36 @@
+[package]
+name = "linux-lts"
+version = "6.18.64"
+release = 1
+arch = "x86_64"
+description = "Evergreen LTS kernel (6.18 longterm)"
+license = "GPL-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-{version}.tar.xz"
+sha256 = ""
+
+[provides]
+kernel = "6.18.64"
+
+[conflicts]
+linux-stable = "*"
+
+[build]
+config_file = "../../kernel/config/evergreen.defconfig"
+script = """
+set -eu
+KVER=$VERSION
+test -f .config
+make olddefconfig
+make -j"${JOBS:-4}"
+install -Dm755 arch/x86/boot/bzImage "$DESTDIR/boot/vmlinuz-$KVER"
+ln -sf "vmlinuz-$KVER" "$DESTDIR/boot/vmlinuz"
+install -Dm644 .config "$DESTDIR/boot/config-$KVER"
+INSTALL_MOD_PATH="$DESTDIR/usr" make modules_install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine-init"]

@@ -1,0 +1,24 @@
+[package]
+name = "wlroots"
+version = "0.20.2"
+arch = "x86_64"
+description = "wlroots"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/{version}/wlroots-{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dexamples=false -Dxwayland=enabled
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["wayland", "wayland-protocols", "libdrm", "libinput", "libxkbcommon", "pixman", "mesa", "libdisplay-info", "libliftoff", "hwdata"]

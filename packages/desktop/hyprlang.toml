@@ -1,0 +1,24 @@
+[package]
+name = "hyprlang"
+version = "0.6.8"
+arch = "x86_64"
+description = "hyprlang"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/hyprwm/hyprlang/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build --parallel "${JOBS:-4}"
+DESTDIR="$DESTDIR" cmake --install build
+"""
+
+[stage1]
+stage = 1
+build_deps = ["hyprutils"]

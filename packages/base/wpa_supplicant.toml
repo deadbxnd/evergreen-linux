@@ -1,0 +1,26 @@
+[package]
+name = "wpa_supplicant"
+version = "2.12"
+arch = "x86_64"
+description = "wpa_supplicant"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://w1.fi/releases/wpa_supplicant-{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+cp defconfig .config
+make -j"${JOBS:-4}"
+install -Dm755 wpa_supplicant "$DESTDIR/usr/sbin/wpa_supplicant"
+install -Dm755 wpa_cli "$DESTDIR/usr/bin/wpa_cli"
+install -Dm755 wpa_passphrase "$DESTDIR/usr/bin/wpa_passphrase"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine", "openssl"]

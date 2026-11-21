@@ -1,0 +1,21 @@
+[package]
+name = "evergreen-cursor-theme"
+version = "2026.11"
+arch = "noarch"
+description = "Evergreen Linux cursor theme"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../../branding/cursors/evergreen-cursor"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/icons"
+cp -a . "$DESTDIR/usr/share/icons/Evergreen-Cursors"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["adwaita-icon-theme"]

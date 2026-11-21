@@ -1,0 +1,24 @@
+[package]
+name = "adwaita-icon-theme"
+version = "51.0"
+arch = "noarch"
+description = "adwaita-icon-theme"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://github.com/GNOME/adwaita-icon-theme/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dgtk2=false
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gtk3", "hicolor-icon-theme"]

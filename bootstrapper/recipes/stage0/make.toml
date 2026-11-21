@@ -1,0 +1,19 @@
+[package]
+name = "make"
+version = "4.3"
+arch = "any"
+description = "GNU make"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/make/make-4.3.tar.gz"
+sha256 = "e05fdde47c5f7ca45cb697e973894ff4f5d79e13b750ed57d7b66d8defc78e19"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./configure --prefix=/usr"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

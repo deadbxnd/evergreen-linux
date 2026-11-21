@@ -1,0 +1,19 @@
+[package]
+name = "openssl"
+version = "3.0.13"
+arch = "any"
+description = "OpenSSL cryptography library"
+license = "Apache-2.0"
+
+[source]
+url = "https://www.openssl.org/source/openssl-3.0.13.tar.gz"
+sha256 = "88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./Configure linux-x86_64 --prefix=/usr --openssldir=/etc/ssl shared"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install_sw"

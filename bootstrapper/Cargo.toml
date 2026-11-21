@@ -1,0 +1,27 @@
+[package]
+name = "evergreen-bootstrap"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Evergreen Linux bootstrapper (stage0 mini-bootstrap + assembly)"
+
+[lib]
+name = "evergreen_bootstrap"
+path = "src/lib.rs"
+
+[dependencies]
+evergreen-common.workspace = true
+eva.workspace = true
+evergreen-build.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+clap.workspace = true
+sha2.workspace = true
+hex.workspace = true
+ureq.workspace = true
+chrono.workspace = true

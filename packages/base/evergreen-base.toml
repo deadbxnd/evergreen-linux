@@ -1,0 +1,39 @@
+[package]
+name = "evergreen-base"
+version = "2026.11"
+arch = "noarch"
+description = "Evergreen Linux base system meta-package"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+btrfs-progs = "*"
+e2fsprogs = "*"
+dosfstools = "*"
+xfsprogs = "*"
+fuse = "*"
+cryptsetup = "*"
+dbus = "*"
+polkit = "*"
+elogind = "*"
+fish = "*"
+tzdata = "*"
+nftables = "*"
+chrony = "*"
+grub2 = "*"
+shim = "*"
+mokutil = "*"
+pine-service-units = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+cat > "$DESTDIR/usr/share/evergreen/base-packages.txt" <<'LIST'
+btrfs-progs e2fsprogs dosfstools xfsprogs fuse cryptsetup dbus polkit elogind fish tzdata nftables chrony grub2 shim mokutil
+LIST
+"""
+
+[stage1]
+stage = 1
+build_deps = ["grub2", "shim", "mokutil", "cryptsetup", "fish", "pine-service-units"]

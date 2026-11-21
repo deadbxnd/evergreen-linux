@@ -1,0 +1,19 @@
+[package]
+name = "linux-headers"
+version = "6.6.88"
+arch = "any"
+description = "Linux kernel headers for stage 0"
+license = "GPL-2.0"
+
+[source]
+url = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.6.88.tar.xz"
+sha256 = "19df89b63ef7e950de7297dabfac0569183bf87636f4c300a25336c7da490650"
+
+[bootstrap]
+stage = 0
+pass = 0
+sysroot = true
+editions = ["both"]
+configure = ""
+build = ""
+install = "make -j{jobs} headers_install INSTALL_HDR_PATH='{sysroot}/usr'"

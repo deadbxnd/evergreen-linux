@@ -1,0 +1,19 @@
+[package]
+name = "kmod"
+version = "31"
+arch = "any"
+description = "Kernel module tools"
+license = "GPL-2.0-or-later"
+
+[source]
+url = "https://github.com/kmod-project/kmod/archive/refs/tags/v31.tar.gz"
+sha256 = "16c40aaa50fc953035b4811b29ce3182f220e95f3c9e5eacb4b07b1abf85f003"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2", "zlib", "xz", "zstd"]
+editions = ["both"]
+configure = "./autogen.sh && ./configure --prefix=/usr --disable-manpages"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

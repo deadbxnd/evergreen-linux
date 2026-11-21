@@ -1,0 +1,29 @@
+[package]
+name = "kde-applications"
+version = "2026.11"
+arch = "noarch"
+description = "KDE applications meta-package"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+dolphin = "*"
+konsole = "*"
+kate = "*"
+okular = "*"
+kdenlive = "*"
+krita = "*"
+ark = "*"
+gwenview = "*"
+kcalc = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+echo "dolphin konsole kate okular kdenlive krita ark gwenview kcalc" > "$DESTDIR/usr/share/evergreen/kde-applications.txt"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["dolphin", "konsole", "kate", "okular", "kdenlive", "krita", "ark", "gwenview", "kcalc"]

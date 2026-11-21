@@ -1,0 +1,19 @@
+[package]
+name = "shadow"
+version = "4.11.1"
+arch = "any"
+description = "User and group management utilities"
+license = "GPL-2.0-or-later"
+
+[source]
+url = "https://github.com/shadow-maint/shadow/archive/refs/tags/v4.11.1.tar.gz"
+sha256 = "f6abfe28e2b3fea8a3378311e721a2a473e7b51e2d36a9a6c54853d1afaeb16d"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = "./autogen.sh --prefix=/usr --disable-nls"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

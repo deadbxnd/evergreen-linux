@@ -1,0 +1,23 @@
+[package]
+name = "chrony"
+version = "4.9"
+arch = "x86_64"
+description = "Network time synchronization daemon"
+license = "GPL-2.0"
+
+[source]
+url = "https://chrony-project.org/releases/chrony-{version}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+./configure --prefix=/usr --with-user=chrony --with-group=chrony
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

@@ -1,0 +1,36 @@
+[package]
+name = "artcraft-suite"
+version = "2026.11"
+arch = "noarch"
+description = "Complete ArtCraft Craft applications suite"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+artcraft-office = "*"
+photocraft = "*"
+lightcraft = "*"
+vectorcraft = "*"
+designcraft = "*"
+figcraft = "*"
+texturecraft = "*"
+materialcraft = "*"
+filmcraft = "*"
+effectcraft = "*"
+anicraft = "*"
+soundcraft = "*"
+cadcraft = "*"
+craft-launcher = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+cat > "$DESTDIR/usr/share/evergreen/artcraft-suite.txt" <<'EOF'
+wordcraft gridcraft deckcraft pdfcraft photocraft lightcraft vectorcraft designcraft figcraft texturecraft materialcraft filmcraft effectcraft anicraft soundcraft cadcraft craft-launcher
+EOF
+"""
+
+[stage1]
+stage = 1
+build_deps = ["artcraft-office", "photocraft", "lightcraft", "vectorcraft", "designcraft", "figcraft", "texturecraft", "materialcraft", "filmcraft", "effectcraft", "anicraft", "soundcraft", "cadcraft", "craft-launcher"]

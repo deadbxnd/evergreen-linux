@@ -1,0 +1,26 @@
+[package]
+name = "artcraft-office"
+version = "2026.11"
+arch = "noarch"
+description = "ArtCraft office suite meta-package"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[dependencies]
+wordcraft = "*"
+gridcraft = "*"
+deckcraft = "*"
+pdfcraft = "*"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/evergreen"
+cat > "$DESTDIR/usr/share/evergreen/artcraft-office.txt" <<'EOF'
+wordcraft gridcraft deckcraft pdfcraft
+EOF
+"""
+
+[stage1]
+stage = 1
+build_deps = ["wordcraft", "gridcraft", "deckcraft", "pdfcraft"]

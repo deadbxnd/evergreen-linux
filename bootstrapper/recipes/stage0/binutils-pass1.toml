@@ -1,0 +1,19 @@
+[package]
+name = "binutils-pass1"
+version = "2.42"
+arch = "any"
+description = "Bootstrap binutils (pass 1)"
+license = "GPL-3.0-or-later"
+
+[source]
+url = "https://mirrors.kernel.org/gnu/binutils/binutils-2.42.tar.xz"
+sha256 = "f6e4d41fd5fc778b06b7891457b3620da5ecea1006c6a4a41ae998109f85a800"
+
+[bootstrap]
+stage = 0
+pass = 1
+build_deps = ["linux-headers"]
+editions = ["both"]
+configure = "./configure --prefix=/usr --with-sysroot='{sysroot}' --disable-nls --disable-werror"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: Rust checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust components
+        run: rustup component add clippy rustfmt
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Check
+        run: cargo check --workspace --all-targets
+      - name: Test
+        run: cargo test --workspace
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+  recipes:
+    name: Validate recipes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Stage 1 recipes
+        run: cargo run -p evergreen-build -- validate-recipes --root packages
+
+  publishing:
+    name: Index signing smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build eva
+        run: cargo build -p eva
+      - name: Generate key
+        run: |
+          mkdir -p ci-artifacts/keys ci-artifacts/repo
+          ./target/debug/eva --root ci-artifacts/root key generate --label ci --output ci-artifacts/keys
+      - name: Generate a test package
+        run: |
+          mkdir -p ci-artifacts/src/usr/bin
+          printf '#!/bin/sh\n' > ci-artifacts/src/usr/bin/demo
+          cat > ci-artifacts/demo.toml <<'EOF'
+          [package]
+          name = "ci-demo"
+          version = "1.0"
+          arch = "noarch"
+
+          [source]
+          path = "src"
+
+          [build]
+          script = "mkdir -p \"$DESTDIR/usr/bin\" && cp usr/bin/demo \"$DESTDIR/usr/bin/\""
+          EOF
+          ./target/debug/eva --root ci-artifacts/root build ci-artifacts/demo.toml
+          cp ci-artifacts/root/var/cache/eva/packages/*.eva ci-artifacts/repo/
+      - name: Build signed index
+        run: ./target/debug/eva --root ci-artifacts/root index ci-artifacts/repo --name core --branch stable --sign ci-artifacts/keys/ci.key
+      - name: Verify signed index
+        run: |
+          ./target/debug/eva --root ci-artifacts/root key add ci-artifacts/keys/ci.pub
+          mkdir -p ci-artifacts/root/etc/eva
+          cat > ci-artifacts/root/etc/eva/repos.toml <<EOF
+          [[repo]]
+          name = "core"
+          url = "file://$GITHUB_WORKSPACE/ci-artifacts/repo"
+          branch = "stable"
+          priority = 0
+          enabled = true
+          EOF
+          ./target/debug/eva --root ci-artifacts/root sync
+          ./target/debug/eva --root ci-artifacts/root list --available

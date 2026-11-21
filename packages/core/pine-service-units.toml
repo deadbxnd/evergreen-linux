@@ -1,0 +1,65 @@
+[package]
+name = "pine-service-units"
+version = "2026.11"
+arch = "noarch"
+description = "pine service units for system daemons and display managers"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[build]
+script = """
+set -eu
+U="$DESTDIR/usr/lib/pine/services"
+mkdir -p "$U/multi-user.target.wants" "$U/graphical.target.wants"
+
+make_unit() {
+    name="$1"; exec_start="$2"; after="$3"
+    cat > "$U/$name.service" <<EOF2
+[Unit]
+Description = "$name service"
+After = ["$after"]
+
+[Service]
+Type = "simple"
+ExecStart = "$exec_start"
+Restart = "on-failure"
+RestartSec = "1s"
+
+[Install]
+WantedBy = ["multi-user.target"]
+EOF2
+}
+
+make_unit dbus "/usr/bin/dbus-daemon --system --nofork --nopidfile --systemd-activation" "sysinit.target"
+make_unit polkit "/usr/lib/polkit-1/polkitd --no-debug" "dbus.service"
+make_unit elogind "/usr/lib/elogind/elogind" "dbus.service"
+make_unit networkmanager "/usr/sbin/NetworkManager --no-daemon" "dbus.service"
+make_unit wpa_supplicant "/usr/sbin/wpa_supplicant -u -s" "network.target"
+make_unit pipewire "/usr/bin/pipewire" "dbus.service"
+make_unit wireplumber "/usr/bin/wireplumber" "pipewire.service"
+make_unit pipewire-pulse "/usr/bin/pipewire-pulse" "pipewire.service"
+make_unit bluez "/usr/sbin/bluetoothd -n" "dbus.service"
+make_unit cups "/usr/sbin/cupsd -f" "dbus.service"
+make_unit upower "/usr/lib/upower/upowerd" "dbus.service"
+make_unit chronyd "/usr/sbin/chronyd -d" "network.target"
+make_unit thermald "/usr/sbin/thermald --no-daemon" "sysinit.target"
+make_unit tlp "/usr/sbin/tlp start" "sysinit.target"
+make_unit nftables "/usr/sbin/nft -f /etc/nftables.conf" "network.target"
+make_unit sshd "/usr/sbin/sshd -D" "network.target"
+make_unit gdm "/usr/sbin/gdm" "dbus.service"
+make_unit sddm "/usr/bin/sddm" "dbus.service"
+make_unit lightdm "/usr/sbin/lightdm" "dbus.service"
+make_unit ly "/usr/bin/ly" "dbus.service"
+make_unit greetd "/usr/bin/greetd" "dbus.service"
+
+for unit in dbus polkit elogind networkmanager wpa_supplicant pipewire wireplumber pipewire-pulse bluez cups upower chronyd thermald tlp nftables sshd; do
+    ln -sf "../$unit.service" "$U/multi-user.target.wants/$unit.service"
+done
+for unit in gdm sddm lightdm ly greetd; do
+    ln -sf "../$unit.service" "$U/graphical.target.wants/$unit.service"
+done
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine-units"]

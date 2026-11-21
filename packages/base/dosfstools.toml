@@ -1,0 +1,24 @@
+[package]
+name = "dosfstools"
+version = "4.2"
+arch = "x86_64"
+description = "FAT filesystem utilities"
+license = "GPL-3.0"
+
+[source]
+url = "https://github.com/dosfstools/dosfstools/archive/refs/tags/{tag}.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+if [ ! -x ./configure ]; then ./autogen.sh; fi
+./configure --prefix=/usr
+make -j"${JOBS:-4}"
+make DESTDIR="$DESTDIR" install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

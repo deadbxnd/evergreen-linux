@@ -1,0 +1,31 @@
+name: Package resolution matrix
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  resolve:
+    name: Resolve representative recipes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe:
+          - packages/desktop/sway.toml
+          - packages/desktop/wayland.toml
+          - packages/desktop/gtk4.toml
+          - packages/desktop/xfce4-terminal.toml
+          - packages/desktop/gnome-shell.toml
+          - packages/desktop/kde-plasma.toml
+          - packages/nonfree/ffmpeg.toml
+          - packages/core/uutils-coreutils.toml
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build eva
+        run: cargo build -p eva
+      - name: Resolve ${{ matrix.recipe }}
+        run: |
+          mkdir -p ci-resolve-root
+          ./target/debug/eva --root ci-resolve-root source resolve "${{ matrix.recipe }}" --refresh

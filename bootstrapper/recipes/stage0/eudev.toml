@@ -1,0 +1,19 @@
+[package]
+name = "eudev"
+version = "3.2.11"
+arch = "any"
+description = "Device management daemon and udev rules"
+license = "GPL-2.0-or-later"
+
+[source]
+url = "https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.11.tar.gz"
+sha256 = "dcfc482099f3fdfcfdb9aeabbc4d609877cf4d2d0407f50ab0c59d43fff44f92"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2", "kmod"]
+editions = ["both"]
+configure = "./autogen.sh --prefix=/usr --disable-manpages"
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' install"

@@ -1,0 +1,24 @@
+[package]
+name = "glib"
+version = "2.86.0"
+arch = "x86_64"
+description = "glib"
+license = "see upstream"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+url = "https://download.gnome.org/sources/glib/2.86/glib-{version}.tar.xz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+meson setup build --prefix=/usr -Dman=false -Dtests=false
+ninja -C build
+DESTDIR="$DESTDIR" ninja -C build install
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

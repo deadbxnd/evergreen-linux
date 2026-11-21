@@ -1,0 +1,19 @@
+[package]
+name = "bzip2"
+version = "1.0.8"
+arch = "any"
+description = "bzip2 compression library"
+license = "BSD-3-Clause"
+
+[source]
+url = "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+sha256 = "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269"
+
+[bootstrap]
+stage = 0
+pass = 6
+build_deps = ["binutils-pass2"]
+editions = ["both"]
+configure = ""
+build = "make -j{jobs}"
+install = "make DESTDIR='{sysroot}' PREFIX=/usr install"

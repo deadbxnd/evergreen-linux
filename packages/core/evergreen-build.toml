@@ -1,0 +1,21 @@
+[package]
+name = "evergreen-build"
+version = "0.1.0"
+arch = "x86_64"
+description = "Evergreen build orchestrator"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../.."
+
+[build]
+script = """
+set -eu
+cargo build --release -p evergreen-build --target-dir "$SRC/target/stage1"
+install -Dm755 "$SRC/target/stage1/release/evergreen-build" "$DESTDIR/usr/bin/evergreen-build"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["eva"]

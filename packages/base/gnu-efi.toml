@@ -1,0 +1,23 @@
+[package]
+name = "gnu-efi"
+version = "4.0.4"
+arch = "x86_64"
+description = "EFI development library for shim"
+license = "GPL-2.0"
+
+[source]
+url = "https://deb.debian.org/debian/pool/main/g/gnu-efi/gnu-efi_{version}.orig.tar.gz"
+sha256 = ""
+
+[build]
+script = """
+set -eu
+make -j"${JOBS:-4}"
+mkdir -p "$DESTDIR/usr/lib/gnu-efi"
+install -Dm644 x86_64/lib/*.a "$DESTDIR/usr/lib/gnu-efi/"
+install -Dm644 x86_64/inc/*.h "$DESTDIR/usr/include/efi/"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["pine"]

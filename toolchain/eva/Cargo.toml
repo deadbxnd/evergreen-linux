@@ -1,0 +1,35 @@
+[package]
+name = "eva"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Evergreen Linux package manager"
+
+[lib]
+name = "eva"
+path = "src/lib.rs"
+
+[dependencies]
+evergreen-common.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+clap.workspace = true
+chrono.workspace = true
+libc.workspace = true
+rusqlite.workspace = true
+sha2.workspace = true
+hex.workspace = true
+ed25519-dalek.workspace = true
+tar.workspace = true
+zstd.workspace = true
+flate2.workspace = true
+fs2.workspace = true
+ureq.workspace = true
+regex.workspace = true
+rand_core.workspace = true
+urlencoding.workspace = true

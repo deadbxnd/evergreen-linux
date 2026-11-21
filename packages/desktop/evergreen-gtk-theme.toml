@@ -1,0 +1,21 @@
+[package]
+name = "evergreen-gtk-theme"
+version = "2026.11"
+arch = "noarch"
+description = "Evergreen Linux GTK theme"
+license = "MIT OR Apache-2.0"
+maintainer = "Evergreen Linux <packages@evergreenlinux.org>"
+
+[source]
+path = "../../branding/themes/evergreen-gtk"
+
+[build]
+script = """
+set -eu
+mkdir -p "$DESTDIR/usr/share/themes"
+cp -a . "$DESTDIR/usr/share/themes/Evergreen"
+"""
+
+[stage1]
+stage = 1
+build_deps = ["gtk3"]
