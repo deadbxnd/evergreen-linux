@@ -1,6 +1,8 @@
 name: Kernel packages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: "0 4 * * *"
@@ -26,11 +28,17 @@ jobs:
       - name: Build eva
         run: cargo build --release -p eva
       - name: Build kernel package
+        id: build
         env:
           EVERGREEN_KERNEL_NO_RUST: "1"
         run: |
+          set -o pipefail
           mkdir -p ci-kernel-root
-          ./target/release/eva --root ci-kernel-root build "packages/base/${{ matrix.kernel }}.toml"
+          ./target/release/eva --root ci-kernel-root build "packages/base/${{ matrix.kernel }}.toml" 2>&1 | tee kernel-build.log
+      - name: Report build failure
+        if: failure() && steps.build.outcome == 'failure'
+        run: |
+          echo "::error::$(tail -n 40 kernel-build.log | tr '\n' ' ')"
       - name: Upload package
         uses: actions/upload-artifact@v4
         with:
