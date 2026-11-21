@@ -439,7 +439,23 @@ fn fetch_source(
     }
 
     if local.is_dir() {
-        copy_tree(&local, source_dir)?;
+        // If the build root lives inside the source tree (for example a
+        // `--root ci-root` inside the repository), copying recursively would
+        // create ever-deeper paths. Skip the child that contains destination.
+        let mut skip: Option<String> = None;
+        if let (Ok(source_abs), Ok(destination_abs)) =
+            (std::fs::canonicalize(&local), std::fs::canonicalize(source_dir))
+        {
+            if destination_abs.starts_with(&source_abs) {
+                if let Ok(relative) = destination_abs.strip_prefix(&source_abs) {
+                    skip = relative
+                        .components()
+                        .next()
+                        .map(|component| component.as_os_str().to_string_lossy().into_owned());
+                }
+            }
+        }
+        copy_tree(&local, source_dir, skip.as_deref())?;
         return Ok(());
     }
 
@@ -642,7 +658,7 @@ fn install_hooks(
     Ok(hooks)
 }
 
-fn copy_tree(source: &Path, destination: &Path) -> Result<()> {
+fn copy_tree(source: &Path, destination: &Path, skip: Option<&str>) -> Result<()> {
     for entry in std::fs::read_dir(source)? {
         let entry = entry?;
         let name = entry.file_name();
@@ -651,11 +667,14 @@ fn copy_tree(source: &Path, destination: &Path) -> Result<()> {
         if matches!(name.as_ref(), "target" | ".git" | "artifacts") {
             continue;
         }
+        if skip.is_some_and(|skip| skip == name.as_ref()) {
+            continue;
+        }
         let target = destination.join(name.as_ref());
         let metadata = entry.metadata()?;
         if metadata.is_dir() {
             std::fs::create_dir_all(&target)?;
-            copy_tree(&entry.path(), &target)?;
+            copy_tree(&entry.path(), &target, skip)?;
         } else {
             std::fs::copy(entry.path(), target)?;
         }
