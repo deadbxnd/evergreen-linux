@@ -21,6 +21,8 @@ linux-stable = "*"
 config_file = "../../kernel/config/evergreen.defconfig"
 script = """
 set -eu
+cd "$(find . -maxdepth 1 -mindepth 1 -type d | head -1)"
+cp ../.config .config
 KVER=$VERSION
 test -f .config
 if [ "${EVERGREEN_KERNEL_NO_RUST:-0}" = "1" ]; then ./scripts/config --disable CONFIG_RUST; fi
